@@ -1,13 +1,14 @@
 ---
-  - name: execute ntpdate command
-    command: ntpdate -s ntp.ubuntu.com
-
   - name: install ntp package
     apt: name=ntp state=present
 
-#  - name: update config according to region
-#    template:
-#      src=
-#      dest=
-#    notify:
-#      - reload ntp
+  - name: remove default ntp configuration
+    file:
+      path=/etc/ntp.conf
+      state=absent
+  - name: copy new configuration file
+    template:
+      src=ntp.conf
+      dest=/etc/ntp.conf
+    notify:
+      - restart ntp
